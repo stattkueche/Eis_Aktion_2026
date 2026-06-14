@@ -405,12 +405,9 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Wird übertragen...';
             
-            // Foto als Base64 konvertieren
             const reader = new FileReader();
             reader.onload = function(e) {
                 const fotoBase64 = e.target.result;
-                
-                // Daten an Google Apps Script senden
                 const googleScriptUrl = 'https://script.google.com/macros/s/AKfycbzLUIEPUdHfbsrakzcIQJFCK-0ORrUoXOVkR-tWpKr1C16UvJ3thhiA_L7TFHUNs4dZwQ/exec';
                 
                 fetch(googleScriptUrl, {
@@ -437,14 +434,12 @@
                         document.getElementById('successMessage').classList.add('show');
                         document.getElementById('eisForm').style.display = 'none';
                         
-                        // 🎉 Konfetti-Animation
                         confetti({
                             particleCount: 100,
                             spread: 70,
                             origin: { y: 0.6 }
                         });
                         
-                        // Zweite Welle Konfetti
                         setTimeout(() => {
                             confetti({
                                 particleCount: 50,
@@ -456,14 +451,13 @@
                         generateQRCode(formData);
                         document.getElementById('qrSection').classList.add('show');
                     } else {
-                        alert('Fehler beim Speichern: ' + (data.error || 'Unbekannter Fehler'));
+                        alert('Fehler: ' + (data.error || 'Unbekannter Fehler'));
                     }
                 })
                 .catch(error => {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Absenden & QR-Code generieren';
-                    console.error('Error:', error);
-                    alert('Fehler beim Übertragen der Daten. Bitte versuchen Sie es später erneut.');
+                    alert('Fehler beim Übertragen der Daten');
                 });
             };
             
@@ -473,8 +467,6 @@
         function generateQRCode(formData) {
             const qrContainer = document.getElementById('qrcode');
             qrContainer.innerHTML = '';
-            
-            // URL zum Formular
             const baseUrl = window.location.href.split('?')[0];
             const qrUrl = baseUrl;
             
@@ -493,12 +485,11 @@
             if (qrCanvas) {
                 const link = document.createElement('a');
                 link.href = qrCanvas.toDataURL();
-                link.download = `Eis-Aktion-Bestätigung-${new Date().toISOString().split('T')[0]}.png`;
+                link.download = `Eis-Aktion-${new Date().toISOString().split('T')[0]}.png`;
                 link.click();
             }
         }
         
-        // Drag & Drop für Datei-Upload
         const fileUpload = document.querySelector('.file-upload');
         const fileInput = document.getElementById('kassenbon');
         
@@ -514,7 +505,6 @@
         fileUpload.addEventListener('drop', (e) => {
             e.preventDefault();
             fileUpload.style.opacity = '1';
-            
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 fileInput.files = files;
